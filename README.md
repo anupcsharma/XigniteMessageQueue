@@ -1,2 +1,2 @@
 # XigniteMessageQueue
-In-memory queue
+Design an in-memory queue from the interface below.
