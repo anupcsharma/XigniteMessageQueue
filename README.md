@@ -1,0 +1,2 @@
+# XigniteMessageQueue
+In-memory queue
