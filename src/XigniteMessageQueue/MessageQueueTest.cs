@@ -30,11 +30,11 @@ namespace XigniteMessageQueue
 			_messageQueue.Send("Queue 2");
 			_messageQueue.Send("Queue 3");
 			
-			
 			_messageQueue.Delete(new Message() {Body = "Queue 2"});
 
 			var allmessages = _messageQueue.Receive();
 			Assert.IsFalse(allmessages.Any(d => d.Body == "Queue 2"));
+
 		}
 
 		[Test]

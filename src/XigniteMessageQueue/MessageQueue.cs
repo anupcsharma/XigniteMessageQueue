@@ -11,6 +11,21 @@ namespace XigniteMessageQueue
 		 private readonly QueueImplementation.Queue<Message> _queue = 
 			new QueueImplementation.Queue<Message>();
 
+		 /// <summary>
+		 /// Sned a message to a message queue
+		 /// </summary>
+		 /// <param name="messageBody"></param>
+		 /// <returns></returns>
+		 public Message Send(string messageBody)
+		 {
+			 Message message = new Message { Body = messageBody };
+			 lock (_queue)
+			 {
+				 _queue.Enqueue(message);
+			 }
+			 return message;
+		 }
+
 		/// <summary>
 		/// Delete a message from a message queue
 		/// </summary>
@@ -52,21 +67,7 @@ namespace XigniteMessageQueue
 			return messages;
 		}
 
-		/// <summary>
-		/// Sned a message to a message queue
-		/// </summary>
-		/// <param name="messageBody"></param>
-		/// <returns></returns>
-		public Message Send(string messageBody)
-		{
-			Message message = new Message { Body = messageBody };
-			lock (_queue)
-			{
-				_queue.Enqueue(message);
-			}
-			return message;
-		}
-
+		
 		/*Methods below are just for testing*/
 		/// <summary>
 		/// Removes a first message from a message queue

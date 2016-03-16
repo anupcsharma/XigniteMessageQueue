@@ -46,10 +46,6 @@ namespace XigniteMessageQueue.QueueImplementation
 				_lastNode.Next = newLastNode;
 				_lastNode = _lastNode.Next;
 			}
-
-			//Handle case when previously there was one node
-			//if (_firstNode.Next == null)
-			//	_firstNode.Next = _lastNode;
 		}
 
 		/// <summary>
@@ -64,6 +60,7 @@ namespace XigniteMessageQueue.QueueImplementation
 				_firstNode = _firstNode.Next;
 				return dequeueData;
 			}
+
 			return default(T);
 		}
 
@@ -78,7 +75,7 @@ namespace XigniteMessageQueue.QueueImplementation
 
 			if (node.Next == null)
 			{
-				node = null;
+				RemoveLastNode();
 			}
 			else
 			{
@@ -118,22 +115,72 @@ namespace XigniteMessageQueue.QueueImplementation
 			return items;
 		}
 
+		/// <summary>
+		/// Get a node given a data parameter
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns>Node</returns>
 		public Node<T> GetNode(T data)
 		{
 			Node<T> node = _firstNode;
+			Node<T> outNode;
 			while (node.Next != null)
 			{
-				//if ((node.Data).Equals(data))
-				//	return node;
-				int number;
-				if(Int32.TryParse(data.ToString(), out number))
-				
-				
-				//if (Utils.Compare(node.Data, data, ""))
-				//	return node;
+				if (GetNode(data, node, out outNode)) 
+					return outNode;
 				node = node.Next;
 			}
-			return node;
+			GetNode(data, node, out outNode);
+			return outNode;
 		}
+		
+		/// <summary>
+		/// Delete a last node
+		/// </summary>
+		public void RemoveLastNode()
+		{
+			Node<T> node = _firstNode;
+			Node<T> previousNode = null;
+			while (node.Next != null) 
+			{
+				previousNode = node;
+				node = node.Next;
+			}
+			
+			if (previousNode == null)
+			{
+				_firstNode = null;
+			}
+			else
+			{
+				previousNode.Next = null;
+			}
+		}
+
+		#region private methods
+
+		private static bool GetNode(T data, Node<T> node, out Node<T> outNode)
+		{
+			if (typeof(T) == typeof(int) || typeof(T) == typeof(string))
+			{
+				if (node.Data.Equals(data))
+				{
+					outNode = node;
+					return true;
+				}
+			}
+			else
+			{
+				if (Utils.Compare(node.Data, data, ""))
+				{
+					outNode = node;
+					return true;
+				}
+			}
+			outNode = null;
+			return false;
+		}
+
+		#endregion
 	}
 }
